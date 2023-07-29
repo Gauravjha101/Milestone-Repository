@@ -1,1 +1,578 @@
+💡    Project :- 1
+
+Pw Blogs - README
+![Pw Blogs Logo/Icon](https://cdn.pixabay.com/photo/
+2014/12/27/15/40/office-581131_640.jpg) _(optional)_
+
+Table of Contents
+- [Pw Blogs](#pw-blogs)
+  - [About](#about)
+  - [Demo link](#demo link)
+  - [Features](#features)
+  - [Usage](#usage)
+  - [Technologies Used](#technologies-used)
+  - [Contact](#contact)
+
+About
+This README file provides an overview of the **Pw Blogs** project, its purpose, features, and usage instructions. It aims to help interested parties understand the project and its potential benefits.
+
+Pw Blogs is a simple blogging web application that allows users to create and manage their blogs. Users can use the provided form to add new blogs, including an image URL, blog title, blog description, and the main text. The blogs are saved using local storage, enabling users to access their blogs even after closing the website.
+
+Demo
+A live demo of the Blog Site can be accessed at [Demo Link](https://cerulean-dieffenbachia-a7401e.netlify.app/) 
+
+Features
+- Easy-to-use form for creating and managing blogs.
+- Blogs are stored locally using local storage for convenient access and retrieval.
+- View a list of blogs on the "Blog" page, displaying brief details for each blog.
+- Click the "Read More" button to view the full blog content in a modal window.
+- Ability to delete blogs from local storage on the "Blog" page.
+
+Usage
+1. On the home page, click the "Add Blog" button to open the blog creation form.
+2. Fill in the required details, including image URL, blog title, blog description, and text.
+3. Click the "Save Blog" button to add the blog. It will appear on the "Blog" page.
+4. On the "Blog" page, click the "Read More" button to view the full blog content in a modal window.
+5. To delete a blog, click the "Delete" button on the respective blog card.
+
+Technologies Used
+- HTML
+- CSS
+- JavaScript
+- Local Storage
+Contact
+For any questions or inquiries about the Pw Blogs project, please contact:
+
+- Name: Gaurav Kumar Jha
+- Email: gjha5345@gmail.com
+- GitHub: https://github.com/Gauravjha101
+
+.card-container { 
+     display: grid; 
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+     gap: 20px; 
+     padding: 20px; 
+ } 
+  
+ .card { 
+     background-color: #fff; 
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+     border-radius: 8px; 
+     padding: 20px; 
+ } 
+  
+ .card img { 
+     width: 100%; 
+     border-radius: 8px; 
+ } 
+  
+ .card h2 { 
+     font-size: 24px; 
+     margin: 10px 0; 
+ } 
+  
+ .card p { 
+     font-size: 16px; 
+     color: #555; 
+     margin: 10px 0; 
+ } 
+  
+ .read-more-btn { 
+     background-color: #4CAF50; 
+     color: white; 
+     padding: 10px 20px; 
+     border: none; 
+     border-radius: 4px; 
+     cursor: pointer; 
+ } 
+  
+ .read-more-btn:hover { 
+     background-color: #45a049; 
+ } 
+  
+  
+ /* Modal styles */ 
+ .modal { 
+     display: flex; 
+     justify-content: center; 
+     align-items: center; 
+     position: fixed; 
+     top: 50%; 
+     left: 0; 
+     width: 100%; 
+     height: 100%; 
+     transform: translateY(-50%); /* Translate the modal vertically by -50% of its own height */ 
+     z-index: 999; 
+ } 
+  
+ .modal-content { 
+     background-color: #fff; 
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+     border-radius: 8px; 
+     padding: 20px; 
+     max-width: 600px; 
+     max-height: 600px; 
+     overflow-y: auto; 
+ } 
+  
+  
+ .modal img { 
+     width: 100%; 
+     height: 200px; 
+     border-radius: 8px; 
+     margin-bottom: 20px; 
+     object-fit: cover; 
+ } 
+  
+ .close-modal-btn { 
+     background-color: #e74c3c; 
+     color: white; 
+     padding: 10px 20px; 
+     border: none; 
+     border-radius: 4px; 
+     cursor: pointer; 
+     margin-top: 20px; 
+     transition: background-color 0.2s; 
+ } 
+  
+ .close-modal-btn:hover { 
+     background-color: #c0392b; 
+ } 
+  
+ .delete-btn { 
+     margin-left: 10px; 
+ } 
+  
+ .modal-content .text { 
+     max-height: 100px;  
+     overflow: auto; 
+     text-align: justify; 
+ } 
+  
+ .modal-content .text::-webkit-scrollbar { 
+     width: 8px;  
+ } 
+  
+ .modal-content .text::-webkit-scrollbar-track { 
+     background-color: #f1f1f1;  
+ } 
+  
+ .modal-content .text::-webkit-scrollbar-thumb { 
+     background-color: #007bff;  
+     border-radius: 8px;  
+ } 
+  
+  
+ @media screen and (max-width: 600px) { 
+     .card-container { 
+         grid-template-columns: 1fr; 
+     } 
+  
+     .modal-content { 
+         max-width: 90%; 
+         max-height: 90%; 
+     } 
+  
+     .modal img { 
+         height: 150px; 
+     } 
+ }
+
+<!DOCTYPE html> 
+ <html lang="en"> 
+  
+ <head> 
+     <meta charset="UTF-8"> 
+     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+     <title>Document</title> 
+     <link rel="stylesheet" href="./blog.css"> 
+     <link rel="stylesheet" href="./style.css"> 
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+ </head> 
+  
+ <body> 
+    <header> 
+         <div class="topnav" id="myTopnav"> 
+             <a href="./index.html" class="active">Home</a> 
+             <a href="#">Blog</a> 
+             <a href="javascript:void(0);" class="icon" onclick="myFunction()"> 
+                 <i class="fa fa-bars"></i> 
+             </a> 
+         </div> 
+     </header> 
+  
+     <!-- card --> 
+      <div class="card-container" id="cardContainer"> 
+         <!-- The card will be dynamically added here from JavaScript --> 
+     </div> 
+  
+     <script src="./blog.js"></script> 
+ </body> 
+  
+ </html>
+
+// navbar 
+ function myFunction() { 
+     var x = document.getElementById("myTopnav"); 
+     if (x.className === "topnav") { 
+         x.className += " responsive"; 
+     } else { 
+         x.className = "topnav"; 
+     } 
+ } 
+  
+document.addEventListener("DOMContentLoaded", function () { 
+     const currentPage = window.location.pathname; 
+     if (currentPage.endsWith("/blog.html")) { 
+         const cardContainer = document.getElementById("cardContainer"); 
+  
+         // Retrieve blog data from localStorage 
+         let blogs = []; 
+         if (typeof(Storage) !== "undefined") { 
+             const existingBlogs = localStorage.getItem('blogs'); 
+             blogs = existingBlogs ? JSON.parse(existingBlogs) : []; 
+         } else { 
+             alert('Local storage is not available. Failed to retrieve blogs.'); 
+         } 
+  
+         // Loop through the blogs and create card for each 
+         blogs.forEach((blog, index) => { 
+             const card = createCard(blog, index); 
+             if (cardContainer) { 
+                 cardContainer.appendChild(card); 
+             } 
+         }); 
+     } 
+ }); 
+  
+ function createCard(blog, index) { 
+     const card = document.createElement("div"); 
+     card.classList.add("card"); 
+  
+     const img = document.createElement("img"); 
+     img.setAttribute("src", blog.imageUrl); 
+     img.setAttribute("alt", "Blog Image"); 
+     card.appendChild(img); 
+  
+     const title = document.createElement("h2"); 
+     title.textContent = blog.blogTitle; 
+     card.appendChild(title); 
+  
+     const description = document.createElement("p"); 
+     description.textContent = blog.blogDescription; 
+     card.appendChild(description); 
+  
+     const readMoreButton = document.createElement("button"); 
+     readMoreButton.textContent = "Read More"; 
+     readMoreButton.classList.add("read-more-btn"); 
+     readMoreButton.addEventListener("click", function () { 
+         openModal(blog); 
+     }); 
+     card.appendChild(readMoreButton); 
+  
+     // Add delete button 
+     const deleteButton = document.createElement("button"); 
+     delete Button.text Content = "Delete"; 
+     deleteButton.classList.add("delete-btn"); 
+     deleteButton.addEventListener("click", function () { 
+         deleteBlog(index); 
+         card.remove(); 
+     }); 
+     card.appendChild(deleteButton); 
+  
+     return card; 
+ } 
+  
+  
+ function deleteBlog(index) { 
+     // Retrieve blog data from localStorage 
+     let blogs = []; 
+     if (typeof(Storage) !== "undefined") { 
+         const existingBlogs = localStorage.getItem('blogs'); 
+         blogs = existingBlogs ? JSON.parse(existingBlogs) : []; 
+     } else { 
+         alert('Local storage is not available. Failed to retrieve blogs.'); 
+         return; 
+     } 
+  
+     // Remove the blog at the specified index 
+     if (index >= 0 && index < blogs.length) { 
+         blogs.splice(index, 1); 
+     } else { 
+         alert('Invalid blog index.'); 
+         return; 
+     } 
+  
+     // Save the updated list of blogs to localStorage 
+     localStorage.setItem('blogs', JSON.stringify(blogs)); 
+ } 
+  
+ function openModal(blog) { 
+     const modal = document.createElement("div"); 
+     modal.classList.add("modal"); 
+  
+     const modalContent = document.createElement("div"); 
+     modalContent.classList.add("modal-content"); 
+  
+     const img = document.createElement("img"); 
+     img.setAttribute("src", blog.imageUrl); 
+     img.setAttribute("alt", "Blog Image"); 
+     modalContent.appendChild(img); 
+  
+     const title = document.createElement("h2"); 
+     title.textContent = blog.blogTitle; 
+     modalContent.appendChild(title); 
+  
+     const description = document.createElement("p"); 
+     description.textContent = blog.blogDescription; 
+     modalContent.appendChild(description); 
+  
+     const text = document.createElement("p"); 
+     text.classList.add("text"); 
+     text.textContent = blog.blogText; 
+     modalContent.appendChild(text); 
+  
+     const closeModalButton = document.createElement("button"); 
+     closeModalButton.textContent = "Close"; 
+     closeModalButton.classList.add("close-modal-btn"); 
+     closeModalButton.addEventListener("click", function () { 
+         closeModal(); 
+     }); 
+     modalContent.appendChild(closeModalButton); 
+  
+     modal.appendChild(modalContent); 
+     document.body.appendChild(modal); 
+  
+     // Prevent scrolling when the modal is open 
+     document.body.style.overflow = "hidden"; 
+ } 
+  
+ function closeModal() { 
+     const modal = document.querySelector(".modal"); 
+     if (modal) { 
+         modal.remove(); 
+         // Enable scrolling when the modal is closed 
+         document.body.style.overflow = "auto"; 
+     } 
+ }
+
+<!DOCTYPE html> 
+ <html lang="en"> 
+  
+ <head> 
+     <meta charset="UTF-8"> 
+     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+     <title>Pw blogs</title> 
+     <link rel="stylesheet" href="./style.css"> 
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+ </head> 
+  
+ <body> 
+     <header> 
+         <div class="topnav" id="myTopnav"> 
+             <a href="#home" class="active">Home</a> 
+             <a href="./blog.html">Blog</a> 
+             <a href="javascript:void(0);" class="icon" onclick="myFunction()"> 
+                 <i class="fa fa-bars"></i> 
+             </a> 
+         </div> 
+     </header> 
+  
+     <!-- form --> 
+  
+     <button id="add-blog-btn" onclick="toggleForm()" style="display: block; margin: 20px auto; width: 200px;">Add Blog</button> 
+  
+  
+     <form id="blog-form" style="display: none;"> 
+         <label for="image-url">Image URL:</label> 
+         <input type="text" id="image-url" name="image-url" required> 
+  
+         <label for="blog-title">Blog Title:</label> 
+         <input type="text" id="blog-title" name="blog-title" required> 
+  
+         <label for="blog-description">Blog Description:</label> 
+         <input type="text" id="blog-description" name="blog-description" required> 
+  
+         <label for="blog-text">Write Text...</label> 
+         <textarea id="blog-text" name="blog-text" required></textarea> 
+  
+         <button type="button" onclick="saveBlog()">Add Blog</button> 
+     </form> 
+     <!-- javascript file --> 
+     <script src="./script.js"></script> 
+ </body> 
+  
+ </html>
+
+// for toggle menu 
+ function myFunction() { 
+     var x = document.getElementById("myTopnav"); 
+     if (x.className === "topnav") { 
+         x.className += " responsive"; 
+     } else { 
+         x.className = "topnav"; 
+     } 
+ } 
+ // this below code is for form  
+  
+  
+ function toggleForm() { 
+     const form = document.getElementById('blog-form'); 
+     const btn = document.getElementById('add-blog-btn'); 
+  
+     if (form.style.display === 'none') { 
+         form.style.display = 'block'; 
+         btn.textContent = 'Close'; 
+     } else { 
+         form.style.display = 'none'; 
+         btn.textContent = 'Add Blog'; 
+     } 
+ } 
+  
+ function saveBlog() { 
+     const imageUrl = document.getElementById('image-url').value; 
+     const blogTitle = document.getElementById('blog-title').value; 
+     const blogDescription = document.getElementById('blog-description').value; 
+     const blogText = document.getElementById('blog-text').value; 
+  
+     const blogData = { 
+         imageUrl: imageUrl, 
+         blog Title: blog Title, 
+         blog Description: blog Description, 
+         blogText: blogText 
+     }; 
+  
+     // Check if localStorage is available 
+     if (typeof(Storage) !== "undefined") { 
+         // Retrieve existing blogs from localStorage 
+         const existingBlogs = localStorage.getItem('blogs'); 
+         const blogs = existingBlogs ? JSON.parse(existingBlogs) : []; 
+  
+         // Add the new blog to the list 
+         blogs.push(blogData); 
+  
+         // Save the updated list of blogs to localStorage 
+         localStorage.setItem('blogs', JSON.stringify(blogs)); 
+     } else { 
+         alert('Local storage is not available. The blog cannot be saved.'); 
+     } 
+  
+     // Reset form fields 
+     document.getElementById('image-url').value = ''; 
+     document.getElementById('blog-title').value = ''; 
+     document.getElementById('blog-description').value = ''; 
+     document.getElementById('blog-text').value = ''; 
+  
+     // Close the form after saving 
+     toggleForm(); 
+ }
+
+body { 
+     margin: 0; 
+     font-family: Arial, Helvetica, sans-serif; 
+ } 
+  
+ .topnav { 
+     overflow: hidden; 
+     background-color: #333; 
+ } 
+  
+ .topnav a { 
+     float: left; 
+     display: block; 
+     color: #f2f2f2; 
+     text-align: center; 
+     padding: 14px 16px; 
+     text-decoration: none; 
+     font-size: 17px; 
+ } 
+  
+ .topnav a:hover { 
+     background-color: #ddd; 
+     color: black; 
+ } 
+  
+ .topnav a.active { 
+     background-color: #04AA6D; 
+     color: white; 
+ } 
+  
+ .topnav .icon { 
+     display: none; 
+ } 
+  
+ @media screen and (max-width: 600px) { 
+     .topnav a:not(:first-child) { 
+         display: none; 
+     } 
+  
+     .topnav a.icon { 
+         float: right; 
+         display: block; 
+     } 
+ } 
+  
+ @media screen and (max-width: 600px) { 
+     .topnav.responsive { 
+         position: relative; 
+     } 
+  
+     .topnav.responsive .icon { 
+         position: absolute; 
+         right: 0; 
+         top: 0; 
+     } 
+  
+     .topnav.responsive a { 
+         float: none; 
+         display: block; 
+         text-align: left; 
+     } 
+ } 
+  
+ /*form */ 
+  
+ form { 
+     max-width: 600px; 
+     margin: 20px auto; 
+     padding: 20px; 
+     background-color: #fff; 
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+     border-radius: 8px; 
+ } 
+  
+ label { 
+     font-weight: bold; 
+     display: block; 
+     margin-bottom: 6px; 
+ } 
+  
+ input[type="text"], 
+ textarea { 
+     width: 100%; 
+     padding: 10px; 
+     margin-bottom: 10px; 
+     border: 1px solid #ccc; 
+     border-radius: 4px; 
+     resize: none; 
+     overflow: auto; 
+ } 
+  
+ textarea { 
+     height: 150px; 
+ } 
+  
+ button { 
+     background-color: #4CAF50; 
+     color: white; 
+     padding: 10px 20px; 
+     border: none; 
+     border-radius: 4px; 
+     cursor: pointer; 
+ } 
+  
+ button:hover { 
+     background-color: #45a049; 
+ }
+
 
