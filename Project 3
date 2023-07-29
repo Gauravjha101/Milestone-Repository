@@ -1,1 +1,510 @@
+💡    Project :- 3
+
+Todo App
+Todo App is a simple and efficient task management application built with React. It allows users to add, update, and remove tasks, as well as track their completion status. The app utilizes local storage to persist tasks, ensuring that the data remains accessible even after closing the application.
+
+Features
+Add a Task: Users can enter their tasks and add them to the todo App app. The app validates that each task contains 50 words or fewer before adding it to the list.
+
+Update Task Status: Users can easily update the status of a task between "Pending" and "Completed." This feature helps users keep track of their progress and accomplishments.
+
+Remove Task: Users can remove a task from the list if it is no longer needed or has been completed.
+
+How to Use
+Add a Task:
+
+Enter your task in the input field.
+Click the "Add" button or press Enter to add the task to the list.
+Tasks are automatically saved to local storage for persistence.
+Update Task Status:
+
+Each task in the list displays its status, which is initially set to "Pending."
+To update the status of a task, click the "Update Status" button beside the task.
+The status will toggle between "Pending" and "Completed" with each click.
+Remove a Task:
+
+To remove a task from the list, click the "Remove" button beside the task.
+The task will be removed from the list and local storage.
+Data Persistence
+The todo App app utilizes local storage to store and retrieve tasks, ensuring that the data remains accessible even after closing the application.
+
+Limitations
+The todo App app uses local storage, which has a limited storage capacity in web browsers (usually around 5-10 MB). If the local storage limit is exceeded, the app may not function as expected.
+The app does not offer user authentication or account creation. It is designed for personal use or within a limited group of users sharing the same device/browser.
+
+<!DOCTYPE html> 
+ <html lang="en"> 
+   <head> 
+     <meta charset="utf-8" /> 
+     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> 
+     <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+     <meta name="theme-color" content="#000000" /> 
+     <meta 
+       name="description" 
+       content="Web site created using create-react-app" 
+     /> 
+     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> 
+     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> 
+     <title>React App</title> 
+   </head> 
+   <body> 
+     <noscript>You need to enable JavaScript to run this app.</noscript> 
+     <div id="root"></div> 
+   </body> 
+ </html>
+
+{ 
+   "short_name": "React App", 
+   "name": "Create React App Sample", 
+   "icons": [ 
+     { 
+       "src": "favicon.ico", 
+       "sizes": "64x64 32x32 24x24 16x16", 
+       "type": "image/x-icon" 
+     }, 
+     { 
+       "src": "logo192.png", 
+       "type": "image/png", 
+       "sizes": "192x192" 
+     }, 
+     { 
+       "src": "logo512.png", 
+       "type": "image/png", 
+       "sizes": "512x512" 
+     } 
+   ], 
+   "start_url": ".", 
+   "display": "standalone", 
+   "theme_color": "#000000", 
+   "background_color": "#ffffff" 
+ }
+
+# https://www.robotstxt.org/robotstxt.html 
+ User-agent: * 
+ Disallow:
+
+  import React, { useState, useEffect } from 'react'; 
+  
+   export default function TodoInput() { 
+     const [Task, SetTask] = useState(''); 
+     const [TaskList, SetTaskList] = useState([]); 
+  
+     useEffect(() => { 
+       const existingTasks = JSON.parse(localStorage.getItem('All-tasks')) || []; 
+       SetTaskList(existingTasks); 
+     }, []); 
+  
+     const handleTaskInput = (event) => { 
+       SetTask(event.target.value); 
+     }; 
+  
+     const handleAddTask = () => { 
+       if (Task.trim() !== '') { 
+         const wordCount = Task.trim().split(' ').length; 
+         if (wordCount <= 50) { 
+           const newTask = { 
+             Date: Date.now(), 
+             text: Task, 
+             status: 'Pending' 
+           }; 
+  
+           const existingTasks = JSON.parse(localStorage.getItem('All-tasks')) || []; 
+           const updatedTasks = [...existingTasks, newTask]; 
+  
+           localStorage.setItem('All-tasks', JSON.stringify(updatedTasks)); 
+  
+           SetTask(''); 
+           document.dispatchEvent(new Event('tasksUpdated')); 
+           SetTaskList(updatedTasks); 
+         } else { 
+           alert('Please enter 50 words or fewer.'); 
+         } 
+       } 
+     }; 
+  
+     const handleRemove = (taskDate) => { 
+       const updatedTaskList = TaskList.filter((task) => task.Date !== taskDate); 
+       localStorage.setItem('All-tasks', JSON.stringify(updatedTaskList)); 
+       SetTaskList(updatedTaskList); 
+     }; 
+  
+     const handleUpdateStatus = (taskDate) => { 
+       const updatedTaskList = TaskList.map((task) => { 
+         if (task.Date === taskDate) { 
+           task.status = task.status === 'Pending' ? 'Completed' : 'Pending'; 
+         } 
+         return task; 
+       }); 
+  
+       localStorage.setItem('All-tasks', JSON.stringify(updatedTaskList)); 
+       SetTaskList(updatedTaskList); 
+     }; 
+  
+     const handleKeyPress = (event) => { 
+       if (event.key === 'Enter') { 
+         handleAddTask(); 
+       } 
+     }; 
+  
+     return ( 
+       <section> 
+         <h1>Todo App</h1> 
+         <div className="container"> 
+           <div className="inside-container"> 
+             <input 
+               type="text" 
+               id="input" 
+               placeholder="Enter your task..." 
+               value={Task} 
+               onChange={handleTaskInput} 
+               onKeyPress={handleKeyPress} 
+             /> 
+             <button id="add-btn" onClick={handleAddTask}> 
+               Add 
+             </button> 
+           </div> 
+         </div> 
+  
+         <div className="task-grid"> 
+           {TaskList.map((task, index) => ( 
+             <div className="task-box" key={task.Date}> 
+               <div id="task"> 
+                 {index + 1}. {task.text} 
+               </div> 
+               <div id="status">Status: {task.status}</div> 
+               <div className="buttons"> 
+                 <button 
+                   className="update-btn" 
+                   onClick={() => handleUpdateStatus(task.Date)} 
+                 > 
+                   Update Status 
+                 </button> 
+                 <button 
+                   className="remove-btn" 
+                   onClick={() => handleRemove(task.Date)} 
+                 > 
+                   Remove 
+                 </button> 
+               </div> 
+             </div> 
+           ))} 
+         </div> 
+       </section> 
+     ); 
+   }
+
+import React from 'react' 
+  
+ export default function remove(props) { 
+     return ( 
+         <div> 
+             localStorage.removeItem({props.removeItems}); 
+         </div> 
+     ) 
+ }
+
+@import url('https://fonts.googleapis.com/css2?family=Ysabeau+Infant:ital,wght@1,600&display=swap'); 
+ @import url('https://fonts.googleapis.com/css2?family=Ysabeau+Infant:ital,wght@1,600&display=swap'); 
+  
+ * { 
+   margin: 0; 
+   padding: 0; 
+   outline: none; 
+   box-sizing: border-box; 
+   overflow-x: hidden; 
+ } 
+  
+ body { 
+   background-color: #8204a8; 
+   font-family: 'Ysabeau Infant', sans-serif; 
+ } 
+  
+ section { 
+   margin: 70px; 
+ } 
+  
+ .container { 
+   display: flex; 
+   align-items: center; 
+   justify-content: center; 
+   height: 30vh; 
+ } 
+  
+ .inside-container { 
+   padding: 40px; 
+   background-color: white; 
+   border-radius: 20px; 
+ } 
+  
+ input { 
+   border: 1px solid #ffbdfb; 
+   padding: 12px; 
+   font-size: 20px; 
+   border-radius: 16px; 
+   font-family: 'Ysabeau Infant', sans-serif; 
+ } 
+  
+ #add-btn { 
+   background-color: #63065d; 
+   color: white; 
+   padding: 12px 40px; 
+   font-size: 20px; 
+   cursor: pointer; 
+   border: none; 
+   border-radius: 16px; 
+   margin: 0 10px; 
+ } 
+  
+ #add-btn:hover { 
+   background-color: #e55bdc; 
+ } 
+  
+ button { 
+   font-family: 'PT Serif', serif; 
+ } 
+  
+ h1 { 
+   text-align: center; 
+   color: white; 
+ } 
+  
+ @keyframes colorful-heading { 
+   0% { 
+     color: #ff42ad; 
+   } 
+  
+   25% { 
+     color: #db06f3; 
+   } 
+  
+   50% { 
+     color: #04e5ed; 
+   } 
+  
+   75% { 
+     color: #deff07; 
+   } 
+  
+   100% { 
+     color: #2cf40e; 
+   } 
+ } 
+  
+ h1 { 
+   animation: colorful-heading 5s infinite; 
+   font-size: 30px; 
+ } 
+  
+ .task-grid { 
+   display: grid; 
+   grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); 
+   grid-gap: 35px; 
+   overflow-y: auto; 
+   margin: 40px; 
+ } 
+  
+ .task-box { 
+   border: 1px solid #ccc; 
+   padding: 10px; 
+   color: #ffffff; 
+   background-color: #21221d; 
+   border-radius: 20px; 
+   word-wrap: break-word; 
+   font-size: 26px; 
+ } 
+  
+ #task { 
+   margin: 20px; 
+ } 
+  
+ #status { 
+   margin: 30px 20px; 
+ } 
+  
+ .buttons { 
+   display: flex; 
+   flex-direction: column; 
+   margin: 15px; 
+ } 
+  
+ .update-btn, 
+ .remove-btn { 
+   padding: 15px 0; 
+   background-color: #0c04a8; 
+   color: white; 
+   margin: 3px 0; 
+   border-radius: 16px; 
+   font-size: 18px; 
+   cursor: pointer; 
+   letter-spacing: 1px; 
+ } 
+  
+ .update-btn:hover, 
+ .remove-btn:hover { 
+   background-color: #1c11ec; 
+ } 
+  
+ @media screen and (max-width: 530px){ 
+   section { 
+     margin: 10px; 
+   } 
+   .task-grid { 
+     grid-gap: 25px; 
+     margin: 10px; 
+   } 
+ } 
+  
+ @media screen and (max-width: 330px){ 
+   section { 
+     margin: 3px; 
+   } 
+   .task-grid { 
+     grid-gap: 10px; 
+     margin: 0px; 
+   } 
+   .task-box { 
+     padding: 5px; 
+     font-size: 16px; 
+   } 
+  
+   .inside-container { 
+     padding: 40px 20px; 
+   } 
+ }
+
+import './App.css'; 
+ import Todoapp from "./component/Todoapp" 
+  
+ function App() { 
+   return ( 
+     <> 
+       <Todoapp/> 
+     </> 
+   ); 
+ } 
+ 
+import { render, screen } from '@testing-library/react'; 
+ import App from './App'; 
+  
+ test('renders learn react link', () => { 
+   render(<App />); 
+   const linkElement = screen.getByText(/learn react/i); 
+   expect(linkElement).toBeInTheDocument(); 
+ });
+
+body { 
+   margin: 0; 
+   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 
+     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 
+     sans-serif; 
+   -webkit-font-smoothing: antialiased; 
+   -moz-osx-font-smoothing: grayscale; 
+ } 
+  
+ code { 
+   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', 
+     monospace; 
+ }
+
+import React from 'react'; 
+ import ReactDOM from 'react-dom/client'; 
+ import './index.css'; 
+ import App from './App'; 
+ import reportWebVitals from './reportWebVitals'; 
+  
+ const root = ReactDOM.createRoot(document.getElementById('root')); 
+ root.render( 
+   <React.StrictMode> 
+     <App /> 
+   </React.StrictMode> 
+ ); 
+  
+ // If you want to start measuring performance in your app, pass a function 
+ // to log results (for example: reportWebVitals(console.log)) 
+ // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals 
+ reportWebVitals();
+
+const reportWebVitals = onPerfEntry => { 
+   if (onPerfEntry && onPerfEntry instanceof Function) { 
+     import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => { 
+       getCLS(onPerfEntry); 
+       getFID(onPerfEntry); 
+       getFCP(onPerfEntry); 
+       getLCP(onPerfEntry); 
+       getTTFB(onPerfEntry); 
+     }); 
+   } 
+ }; 
+  
+ export default reportWebVitals;
+
+// jest-dom adds custom jest matchers for asserting on DOM nodes. 
+ // allows you to do things like: 
+ // expect(element).toHaveTextContent(/react/i) 
+ // learn more: https://github.com/testing-library/jest-dom 
+ import '@testing-library/jest-dom';
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files. 
+  
+ # dependencies 
+ /node_modules 
+ /.pnp 
+ .pnp.js 
+  
+ # testing 
+ /coverage 
+  
+ # production 
+ /build 
+  
+ # misc 
+ .DS_Store 
+ .env.local 
+ .env.development.local 
+ .env.test.local 
+ .env.production.local 
+  
+ npm-debug.log* 
+ yarn-debug.log* 
+ yarn-error.log*
+
+{ 
+   "name": "to-do-app", 
+   "version": "0.1.0", 
+   "private": true, 
+   "dependencies": { 
+     "@testing-library/jest-dom": "^5.16.5", 
+     "@testing-library/react": "^13.4.0", 
+     "@testing-library/user-event": "^13.5.0", 
+     "react": "^18.2.0", 
+     "react-dom": "^18.2.0", 
+     "react-scripts": "5.0.1", 
+     "web-vitals": "^2.1.4" 
+   }, 
+   "scripts": { 
+     "start": "react-scripts start", 
+     "build": "react-scripts build", 
+     "test": "react-scripts test", 
+     "eject": "react-scripts eject" 
+   }, 
+   "eslintConfig": { 
+     "extends": [ 
+       "react-app", 
+       "react-app/jest" 
+     ] 
+   }, 
+   "browserslist": { 
+     "production": [ 
+       ">0.2%", 
+       "not dead", 
+       "not op_mini all" 
+     ], 
+     "development": [ 
+       "last 1 chrome version", 
+       "last 1 firefox version", 
+       "last 1 safari version" 
+     ] 
+   } 
+ }
+
 
